@@ -1,0 +1,16 @@
+server:
+  build: .
+  working_dir: /usr/src/app
+  command: dockerize -wait tcp://broker:5672 -timeout 60s node ./examples/client.js
+  links:
+   - broker
+  environment:
+    AMQP_URL: amqp://guest:guest@broker:5672/
+    PORTHOS_LOG_LEVEL: debug
+  volumes:
+   - .:/usr/src/app
+  hostname: porthos
+broker:
+  image: rabbitmq:3.6-management
+  ports:
+   - "15672:15672"

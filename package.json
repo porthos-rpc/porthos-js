@@ -1,0 +1,15 @@
+{
+  "name": "porthos-js",
+  "version": "0.0.1",
+  "description": "A RPC over AMQP library for server-side JavaScript",
+  "author": "Germano Fronza <germano.inf@gmail.com>",
+  "main": "client_api.js",
+  "engines": {
+    "node": ">=0.8 <6 || ^6"
+  },
+  "dependencies": {
+    "amqplib": "^0.4.2",
+    "when": "~3.6.2",
+    "winston": "^2.2.0"
+  }
+}
