@@ -40,6 +40,6 @@ Pull requests are very much welcomed. Make sure a test or example is included th
 Docker is being used for the local environment. To build/run/test your code you can bash into the server container:
 
 ```sh
-$ docker-compose run server bash
+$ docker-compose run client bash
 root@porthos:/usr/src/app# node exampls/client.js
 ```
