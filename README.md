@@ -4,6 +4,8 @@ A RPC over AMQP library for server-side JavaScript.
 
 ## Status
 
+[![Build Status](https://travis-ci.org/porthos-rpc/porthos-js.svg?branch=master)](https://travis-ci.org/porthos-rpc/porthos-js)
+
 Beta. Server and Client API may change a bit.
 
 ## Goal
