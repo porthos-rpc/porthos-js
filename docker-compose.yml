@@ -1,4 +1,4 @@
-server:
+client:
   build: .
   working_dir: /usr/src/app
   command: dockerize -wait tcp://broker:5672 -timeout 60s node ./examples/client.js
