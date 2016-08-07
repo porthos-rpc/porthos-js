@@ -1,0 +1,11 @@
+language: node_js
+node_js:
+    - "6"
+    - "6.1"
+    - "5.11"
+notifications:
+    email:
+        recipients:
+            - devs@eventials.com
+        on_success: never
+        on_failure: always
