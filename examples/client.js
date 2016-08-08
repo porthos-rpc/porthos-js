@@ -14,4 +14,4 @@ function bootstrapClient(broker) {
     })
 };
 
-porthos.createBroker().connect(process.env.AMQP_URL).then(bootstrapClient).catch(console.warn);
+porthos.createBroker(process.env.AMQP_URL).then(bootstrapClient).catch(console.warn);

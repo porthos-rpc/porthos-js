@@ -18,7 +18,7 @@ The client is very simple. The method `porthos.createClient` takes a broker, a `
 
 
 ```javascript
-var porthos = require('../client_api');
+var porthos = require('porthos/client_api');
 
 function bootstrapClient(broker) {
     porthos.createClient(broker, 'UserService').then(function(client) {
@@ -28,7 +28,7 @@ function bootstrapClient(broker) {
     })
 };
 
-porthos.createBroker().connect(process.env.AMQP_URL).then(bootstrapClient).catch(console.warn);
+porthos.createBroker(process.env.AMQP_URL).then(bootstrapClient).catch(console.warn);
 ```
 
 ## Server
