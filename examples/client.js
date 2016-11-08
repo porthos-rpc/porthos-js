@@ -4,7 +4,7 @@ function bootstrapClient(broker) {
     porthos.createClient(broker, 'UserService', 5000).then((client) => {
         // call the remote method and log the response when it's available.
         client.call('doSomethingThatReturnsValue', 20).then((response) => {
-            console.log('Response: %s', response);
+            console.log('Response: %s', response.content);
         }).catch((error) => console.log('Error', error));
 
         // call a void method.

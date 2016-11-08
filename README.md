@@ -23,7 +23,7 @@ var porthos = require('porthos/client_api');
 function bootstrapClient(broker) {
     porthos.createClient(broker, 'UserService').then((client) => {
         client.call('doSomething', 20).then((response) => {
-            console.log('Got response: %s', response);
+            console.log('Got response: %s', response.content);
         });
     })
 };

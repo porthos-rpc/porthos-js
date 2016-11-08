@@ -39,10 +39,14 @@ class InMemoryChannel {
 
             if (callback) {
                 callback({
-                   content: '{"method":"someMethod","args":[1,"string arg"]}',
-                   properties: {
-                       correlationId: options['correlationId'] 
-                   }
+                    content: '{"method":"someMethod","args":[1,"string arg"]}',
+                    contentType: 'application/json',
+                    headers: {
+                        statusCode: 200
+                    }, 
+                    properties: {
+                        correlationId: options['correlationId'] 
+                    }
                 });
             }
         }
@@ -195,12 +199,16 @@ describe('Client', () => {
             porthos.createClient(fakeBroker, serviceName, requestTTL).then((client) => {
                 var slot = client._getNewSlot(); 
                 slot.reply.promise.then((response) => {
-                    assert.equal(response, 'someContent');
+                    assert.equal(response.content, 'someContent');
                     done();
                 });
 
                 client._processResponse({
                     content: 'someContent',
+                    contentType: 'text/plain',
+                    headers: {
+                        statusCode: 200
+                    },
                     properties: {
                         correlationId: slot.correlationId
                     }
