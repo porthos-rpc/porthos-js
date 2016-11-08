@@ -21,8 +21,8 @@ The client is very simple. The method `porthos.createClient` takes a broker, a `
 var porthos = require('porthos/client_api');
 
 function bootstrapClient(broker) {
-    porthos.createClient(broker, 'UserService').then(function(client) {
-        client.call('doSomething', 20).then(function(response) {
+    porthos.createClient(broker, 'UserService').then((client) => {
+        client.call('doSomething', 20).then((response) => {
             console.log('Got response: %s', response);
         });
     })

@@ -115,14 +115,14 @@ class DummyBroker {
 
 }
 
-describe('Client', function() {
-    describe('_start', function() {
-        it('it should start and fill all attributes', function(done) {
+describe('Client', () => {
+    describe('_start', () => {
+        it('it should start and fill all attributes', (done) => {
             var fakeBroker = new DummyBroker();
             var serviceName = 'ServiceName';
             var requestTTL = 1500;
 
-            porthos.createClient(fakeBroker, serviceName, requestTTL).then(function(client) {
+            porthos.createClient(fakeBroker, serviceName, requestTTL).then((client) => {
                 assert.equal(client.broker, fakeBroker);
                 assert.equal(client.serviceName, serviceName);
                 assert.equal(client.requestTTL, requestTTL);
@@ -132,13 +132,13 @@ describe('Client', function() {
         });
     });
 
-    describe('_getCorrelationId', function() {
-        it('it should create a valid correlationId', function(done) {
+    describe('_getCorrelationId', () => {
+        it('it should create a valid correlationId', (done) => {
             var fakeBroker = new DummyBroker();
             var serviceName = 'ServiceName';
             var requestTTL = 1500;
 
-            porthos.createClient(fakeBroker, serviceName, requestTTL).then(function(client) {
+            porthos.createClient(fakeBroker, serviceName, requestTTL).then((client) => {
                 assert.ok(client._getNewCorrelationId().endsWith('.1'));
                 assert.ok(client._getNewCorrelationId().endsWith('.2'));
 
@@ -150,13 +150,13 @@ describe('Client', function() {
         });
     });
 
-    describe('_getNewSlot', function() {
-        it('it should create and store a new slot', function(done) {
+    describe('_getNewSlot', () => {
+        it('it should create and store a new slot', (done) => {
             var fakeBroker = new DummyBroker();
             var serviceName = 'ServiceName';
             var requestTTL = 1500;
 
-            porthos.createClient(fakeBroker, serviceName, requestTTL).then(function(client) {
+            porthos.createClient(fakeBroker, serviceName, requestTTL).then((client) => {
                 var slot = client._getNewSlot(); 
 
                 assert.ok(slot.reply !== undefined);
@@ -168,13 +168,13 @@ describe('Client', function() {
         });
     });
 
-    describe('_freeSlot', function() {
-        it('it should free up the given slot', function(done) {
+    describe('_freeSlot', () => {
+        it('it should free up the given slot', (done) => {
             var fakeBroker = new DummyBroker();
             var serviceName = 'ServiceName';
             var requestTTL = 1500;
 
-            porthos.createClient(fakeBroker, serviceName, requestTTL).then(function(client) {
+            porthos.createClient(fakeBroker, serviceName, requestTTL).then((client) => {
                 var slot = client._getNewSlot(); 
                 assert.ok(client.slots[slot.correlationId] !== undefined);
 
@@ -186,15 +186,15 @@ describe('Client', function() {
         });
     });
 
-    describe('_processResponse', function() {
-        it('it should process the msg response and resolve the promise', function(done) {
+    describe('_processResponse', () => {
+        it('it should process the msg response and resolve the promise', (done) => {
             var fakeBroker = new DummyBroker();
             var serviceName = 'ServiceName';
             var requestTTL = 1500;
 
-            porthos.createClient(fakeBroker, serviceName, requestTTL).then(function(client) {
+            porthos.createClient(fakeBroker, serviceName, requestTTL).then((client) => {
                 var slot = client._getNewSlot(); 
-                slot.reply.promise.then(function(response) {
+                slot.reply.promise.then((response) => {
                     assert.equal(response, 'someContent');
                     done();
                 });
@@ -209,15 +209,15 @@ describe('Client', function() {
         });
     });
 
-    describe('_sendRequest', function() {
-        it('it should prepare and sent the request message to the broker', function(done) {
+    describe('_sendRequest', () => {
+        it('it should prepare and sent the request message to the broker', (done) => {
             var fakeBroker = new DummyBroker();
             var serviceName = 'ServiceName';
             var requestTTL = 1500;
 
-            porthos.createClient(fakeBroker, serviceName, requestTTL).then(function(client) {
+            porthos.createClient(fakeBroker, serviceName, requestTTL).then((client) => {
                 var ok = client._sendRequest('someMethod', [1, 'string arg'], 'correlationId', 'replyTo');
-                ok.then(function(response) { 
+                ok.then((response) => { 
                     var exchange = response[0],
                         routingKey = response[1],
                         message = response[2],
@@ -235,56 +235,54 @@ describe('Client', function() {
         });
     });
 
-    describe('call', function() {
-        it('it should call and get a timeout error', function(done) {
+    describe('call', () => {
+        it('it should call and get a timeout error', (done) => {
             var fakeBroker = new DummyBroker();
             var serviceName = 'ServiceName';
             var requestTTL = 10;
 
-            porthos.createClient(fakeBroker, serviceName, requestTTL).then(function(client) {
+            porthos.createClient(fakeBroker, serviceName, requestTTL).then((client) => {
                 var ok = client.call('someMethod', "string arg");
-                ok.catch(function(error) {
-                    done();
-                });
+                ok.catch((error) => done());
             });
         });
 
-        it('it should call a fake remote method and receive the response', function(done) {
+        it('it should call a fake remote method and receive the response', (done) => {
             var inMemoryBroker = new InMemoryBroker();
             var serviceName = 'ServiceName';
             var requestTTL = 100;
 
-            porthos.createClient(inMemoryBroker, serviceName, requestTTL).then(function(client) {
+            porthos.createClient(inMemoryBroker, serviceName, requestTTL).then((client) => {
                 var ok = client.call('someMethod', "string arg");
-                ok.then(function(response) {
+                ok.then((response) => {
                     done();
                 });
             });
         });
     });
 
-     describe('callVoid', function() {
-        it('it should call a void method', function(done) {
+     describe('callVoid', () => {
+        it('it should call a void method', (done) => {
             var fakeBroker = new DummyBroker();
             var serviceName = 'ServiceName';
             var requestTTL = 10;
 
-            porthos.createClient(fakeBroker, serviceName, requestTTL).then(function(client) {
+            porthos.createClient(fakeBroker, serviceName, requestTTL).then((client) => {
                 client.callVoid('someMethod', "string arg");
                 done();
             });
         });
     });
 
-    describe('close', function() {
-        it('it should close and dispose resources', function(done) {
+    describe('close', () => {
+        it('it should close and dispose resources', (done) => {
             var fakeBroker = new DummyBroker();
             var serviceName = 'ServiceName';
             var requestTTL = 1500;
 
-            porthos.createClient(fakeBroker, serviceName, requestTTL).then(function(client) {
+            porthos.createClient(fakeBroker, serviceName, requestTTL).then((client) => {
                 var ok = client.close();
-                ok.then(function() { 
+                ok.then(() => { 
                     done();
                 });
             });
