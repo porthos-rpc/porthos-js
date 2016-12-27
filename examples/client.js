@@ -1,13 +1,11 @@
 var porthos = require('../client_api');
 
 function bootstrapClient(broker) {
-    porthos.createClient(broker, 'UserService', 5000).then(function(client) {
+    porthos.createClient(broker, 'UserService', 5000).then((client) => {
         // call the remote method and log the response when it's available.
-        client.call('doSomethingThatReturnsValue', 20).then(function(response) {
-            console.log('Response: %s', response);
-        }).catch(function(error) {
-            console.log('Error', error);
-        });
+        client.call('doSomethingThatReturnsValue', 20).then((response) => {
+            console.log('Response: %s', response.content);
+        }).catch((error) => console.log('Error', error));
 
         // call a void method.
         client.callVoid('doSomething', 20);
