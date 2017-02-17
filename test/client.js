@@ -119,6 +119,10 @@ class DummyBroker {
 
 }
 
+class DummyClient {
+
+}
+
 describe('Client', () => {
     describe('_start', () => {
         it('it should start and fill all attributes', (done) => {
@@ -224,7 +228,7 @@ describe('Client', () => {
             var requestTTL = 1500;
 
             porthos.createClient(fakeBroker, serviceName, requestTTL).then((client) => {
-                var ok = client._sendRequest('someMethod', [1, 'string arg'], 'correlationId', 'replyTo');
+                var ok = client._sendRequest('someMethod', new Buffer(JSON.stringify([1,"string arg"])), 'correlationId', 'replyTo');
                 ok.then((response) => { 
                     var exchange = response[0],
                         routingKey = response[1],
@@ -233,51 +237,13 @@ describe('Client', () => {
 
                     assert.equal(exchange, '');
                     assert.equal(routingKey, serviceName);
-                    assert.equal(message.toString(), '{"method":"someMethod","args":[1,"string arg"]}');
+                    assert.equal(message.toString(), JSON.stringify([1,"string arg"]));
+                    assert.equal(options.headers['X-Method'], 'someMethod');
                     assert.equal(options['correlationId'], 'correlationId');
                     assert.equal(options['replyTo'], 'replyTo');
 
                     done();
                 });
-            });
-        });
-    });
-
-    describe('call', () => {
-        it('it should call and get a timeout error', (done) => {
-            var fakeBroker = new DummyBroker();
-            var serviceName = 'ServiceName';
-            var requestTTL = 10;
-
-            porthos.createClient(fakeBroker, serviceName, requestTTL).then((client) => {
-                var ok = client.call('someMethod', "string arg");
-                ok.catch((error) => done());
-            });
-        });
-
-        it('it should call a fake remote method and receive the response', (done) => {
-            var inMemoryBroker = new InMemoryBroker();
-            var serviceName = 'ServiceName';
-            var requestTTL = 100;
-
-            porthos.createClient(inMemoryBroker, serviceName, requestTTL).then((client) => {
-                var ok = client.call('someMethod', "string arg");
-                ok.then((response) => {
-                    done();
-                });
-            });
-        });
-    });
-
-     describe('callVoid', () => {
-        it('it should call a void method', (done) => {
-            var fakeBroker = new DummyBroker();
-            var serviceName = 'ServiceName';
-            var requestTTL = 10;
-
-            porthos.createClient(fakeBroker, serviceName, requestTTL).then((client) => {
-                client.callVoid('someMethod', "string arg");
-                done();
             });
         });
     });
@@ -296,4 +262,56 @@ describe('Client', () => {
             });
         });
     });
+
+    describe('async', () => {
+        it('it should call and get a timeout error', (done) => {
+            var fakeBroker = new DummyBroker();
+            var serviceName = 'ServiceName';
+            var requestTTL = 10;
+
+            porthos.createClient(fakeBroker, serviceName, requestTTL).then((client) => {
+                var ok = client.call('someMethod').withArgs("string arg").async();
+                ok.catch((error) => done());
+            });
+        });
+
+        it('it should call a fake remote method and receive the response', (done) => {
+            var inMemoryBroker = new InMemoryBroker();
+            var serviceName = 'ServiceName';
+            var requestTTL = 100;
+
+            porthos.createClient(inMemoryBroker, serviceName, requestTTL).then((client) => {
+                var ok = client.call('someMethod').withMap({foo: 'bar'}).async();
+                ok.then((response) => {
+                    done();
+                });
+            });
+        });
+    });
+
+    describe('void', () => {
+        it('it should call a void method with args', (done) => {
+            var fakeBroker = new DummyBroker();
+            var serviceName = 'ServiceName';
+            var requestTTL = 10;
+
+            porthos.createClient(fakeBroker, serviceName, requestTTL).then((client) => {
+                client.call('someMethod').withBody(new Buffer("raw data")).void();
+                done();
+            });
+        });
+
+        it('it should call a void method without args', (done) => {
+            var fakeBroker = new DummyBroker();
+            var serviceName = 'ServiceName';
+            var requestTTL = 10;
+
+            porthos.createClient(fakeBroker, serviceName, requestTTL).then((client) => {
+                client.call('someMethod').void();
+                done();
+            });
+        });
+    });
+
 });
+
