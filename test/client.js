@@ -43,9 +43,9 @@ class InMemoryChannel {
                     contentType: 'application/json',
                     headers: {
                         statusCode: 200
-                    }, 
+                    },
                     properties: {
-                        correlationId: options['correlationId'] 
+                        correlationId: options['correlationId']
                     }
                 });
             }
@@ -150,7 +150,7 @@ describe('Client', () => {
                 assert.ok(client._getNewCorrelationId().endsWith('.1'));
                 assert.ok(client._getNewCorrelationId().endsWith('.2'));
 
-                client.requestNumber = Number.MAX_SAFE_INTEGER - 1; 
+                client.requestNumber = Number.MAX_SAFE_INTEGER - 1;
                 assert.ok(client._getNewCorrelationId().endsWith('.1'));
 
                 done();
@@ -165,7 +165,7 @@ describe('Client', () => {
             var requestTTL = 1500;
 
             porthos.createClient(fakeBroker, serviceName, requestTTL).then((client) => {
-                var slot = client._getNewSlot(); 
+                var slot = client._getNewSlot();
 
                 assert.ok(slot.reply !== undefined);
                 assert.ok(slot.correlationId !== undefined);
@@ -183,7 +183,7 @@ describe('Client', () => {
             var requestTTL = 1500;
 
             porthos.createClient(fakeBroker, serviceName, requestTTL).then((client) => {
-                var slot = client._getNewSlot(); 
+                var slot = client._getNewSlot();
                 assert.ok(client.slots[slot.correlationId] !== undefined);
 
                 client._freeSlot(slot);
@@ -201,7 +201,7 @@ describe('Client', () => {
             var requestTTL = 1500;
 
             porthos.createClient(fakeBroker, serviceName, requestTTL).then((client) => {
-                var slot = client._getNewSlot(); 
+                var slot = client._getNewSlot();
                 slot.reply.promise.then((response) => {
                     assert.equal(response.content, 'someContent');
                     done();
@@ -229,7 +229,7 @@ describe('Client', () => {
 
             porthos.createClient(fakeBroker, serviceName, requestTTL).then((client) => {
                 var ok = client._sendRequest('someMethod', new Buffer(JSON.stringify([1,"string arg"])), 'correlationId', 'replyTo');
-                ok.then((response) => { 
+                ok.then((response) => {
                     var exchange = response[0],
                         routingKey = response[1],
                         message = response[2],
@@ -256,7 +256,7 @@ describe('Client', () => {
 
             porthos.createClient(fakeBroker, serviceName, requestTTL).then((client) => {
                 var ok = client.close();
-                ok.then(() => { 
+                ok.then(() => {
                     done();
                 });
             });
@@ -281,7 +281,7 @@ describe('Client', () => {
             var requestTTL = 100;
 
             porthos.createClient(inMemoryBroker, serviceName, requestTTL).then((client) => {
-                var ok = client.call('someMethod').withMap({foo: 'bar'}).async();
+                var ok = client.call('someMethod').withJSON({foo: 'bar'}).async();
                 ok.then((response) => {
                     done();
                 });

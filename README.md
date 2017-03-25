@@ -23,7 +23,7 @@ var porthos = require('porthos/client_api');
 function bootstrapClient(broker) {
     porthos.createClient(broker, 'UserService').then((client) => {
         // async call with return value.
-        client.call('doSomething').withMap({foo: 'bar'}).async().then((response) => {
+        client.call('doSomething').withJSON({foo: 'bar'}).async().then((response) => {
             console.log('Got response: %s', response.content);
         });
 
